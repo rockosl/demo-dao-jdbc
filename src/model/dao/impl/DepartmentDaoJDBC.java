@@ -26,18 +26,15 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 	@Override
 	public void insert(Department obj) {
 		String sql = "INSERT INTO department (Name) VALUES (?)";
-		
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			
 			st.setString(1, obj.getName());
-			
+
 			int rowsAffected = st.executeUpdate();
-			
-			if(rowsAffected > 0) {
+			if (rowsAffected > 0) {
 				ResultSet rs = st.getGeneratedKeys();
-				if(rs.next()) {
+				if (rs.next()) {
 					int id = rs.getInt(1);
 					obj.setId(id);
 				}
@@ -55,16 +52,15 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 	@Override
 	public void update(Department obj) {
 		String sql = "UPDATE department SET Name = ? WHERE Id = ? ";
-		
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			
+
 			st.setString(1, obj.getName());
 			st.setInt(2, obj.getId());
-			
+
 			st.executeUpdate();
-			
+
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		} finally {
@@ -80,7 +76,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 		try {
 			st = conn.prepareStatement(sql);
 			st.setInt(1, id);
-			
+
 			st.executeUpdate();
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
@@ -114,7 +110,6 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 		}
 	}
 
-
 	private Department instantiateDepartment(ResultSet rs) throws SQLException {
 		Department dep = new Department();
 		dep.setId(rs.getInt("Id"));
@@ -131,19 +126,17 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 		try {
 			st = conn.prepareStatement(sql);
 			rs = st.executeQuery();
-			
+
 			List<Department> list = new ArrayList<>();
 			Map<Integer, Department> map = new HashMap<>();
-			
+
 			while (rs.next()) {
-				
 				Department dep = map.get(rs.getInt("Id"));
-				
-				if(dep == null) {
+
+				if (dep == null) {
 					dep = instantiateDepartment(rs);
 					map.put(rs.getInt("Id"), dep);
 				}
-				
 				list.add(dep);
 			}
 			return list;
@@ -155,5 +148,4 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 			DB.closeResultSet(rs);
 		}
 	}
-
 }
