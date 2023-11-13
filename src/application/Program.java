@@ -40,6 +40,7 @@ public class Program {
 		
 		System.out.println("\n=== TESTE 6: seller delete ===");
 		sellerDao.deleteById(8);
+		System.out.println("Deleted!");
 	}
 
 }
